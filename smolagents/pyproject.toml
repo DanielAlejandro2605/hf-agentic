@@ -1,0 +1,8 @@
+[project]
+name = "HF-Agentic"
+version = "0.1.0"
+description = "42AI Beta Project"
+requires-python = ">=3.10"
+dependencies = [
+    "smolagents>=1.22.0",
+]
