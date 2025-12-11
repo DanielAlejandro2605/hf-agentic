@@ -79,11 +79,15 @@ echo 'GROQ_API_KEY=gsk_your_key_here' > .env
 
 ### Groq Models Available
 
-| Model | Speed | Quality |
-|-------|-------|---------|
-| `llama-3.1-8b-instant` | ⚡ Fastest | Good |
-| `llama-3.1-70b-versatile` | Fast | Best |
-| `mixtral-8x7b-32768` | Fast | Great |
+See full list: **https://console.groq.com/docs/models**
+
+| Model | Use Case |
+|-------|----------|
+| `llama-3.3-70b-versatile` | Text generation (best quality) |
+| `llama3-8b-8192` | Text generation (fast) |
+| `qwen-qwq-32b` | Reasoning |
+| `llama-4-scout-17b-16e-instruct` | Function calling, Vision |
+| `whisper-large-v3` | Speech to text |
 
 ## 📦 All Commands
 
