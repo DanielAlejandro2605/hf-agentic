@@ -2,7 +2,7 @@
 
 # Configuration - all in sgoinfre to save home space
 SGOINFRE_DIR := /sgoinfre/goinfre/Perso/$(USER)
-VENV_DIR := $(SGOINFRE_DIR)/hf-agentic-venv
+VENV_DIR := $(SGOINFRE_DIR)/.venv
 HF_CACHE_DIR := $(SGOINFRE_DIR)/huggingface/hub
 
 help:
@@ -36,13 +36,17 @@ install:
 		echo "Run: source ~/.local/bin/env"; \
 	fi
 	uv venv $(VENV_DIR) --python 3.10
-	VIRTUAL_ENV=$(VENV_DIR) uv sync
+	@# Create symlink so uv sync uses the sgoinfre venv
+	@rm -f .venv
+	@ln -s $(VENV_DIR) .venv
+	uv sync
 	@echo ""
 	@echo "✓ Shared venv created at: $(VENV_DIR)"
+	@echo "✓ Symlink .venv -> $(VENV_DIR)"
 	@echo "✓ HF cache at: $(HF_CACHE_DIR)"
 
 sync:
-	VIRTUAL_ENV=$(VENV_DIR) uv sync
+	uv sync
 
 check-env:
 	@echo ""
