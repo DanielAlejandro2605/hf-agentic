@@ -1,7 +1,7 @@
 .PHONY: help install sync run clean check-env
 
 # Configuration
-HF_CACHE_DIR ?= /Users/danielnieto/Desktop/perso/42AI/HF-Agentic/hub
+HF_CACHE_DIR ?= "/sgoinfre/goinfre/Perso/$USER/huggingface/hub"
 
 help:
 	@echo "Commands:"

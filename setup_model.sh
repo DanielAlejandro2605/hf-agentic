@@ -26,9 +26,9 @@ NC='\033[0m' # No Color
 
 # Default cache directory - uses sgoinfre for 42 students
 # Can be overridden by setting HF_HUB_CACHE env var
-DEFAULT_CACHE_DIR="/sgoinfre/$USER/huggingface/hub"
+DEFAULT_CACHE_DIR="/sgoinfre/goinfre/Perso/$USER/huggingface/hub"
 HF_HUB_CACHE="${HF_HUB_CACHE:-$DEFAULT_CACHE_DIR}"
-HF_HOME="${HF_HOME:-/sgoinfre/$USER/huggingface}"
+HF_HOME="${HF_HOME:-/sgoinfre/goinfre/Perso/$USER/huggingface/hub}"
 
 # Default model (can be passed as argument)
 DEFAULT_MODEL="Qwen/Qwen2.5-0.5B-Instruct"
