@@ -1,121 +1,155 @@
-# Python Project Setup with uv and Makefile
+# HF-Agentic Setup
 
-## What is uv?
+Local model templates for AI agent frameworks using HuggingFace models.
 
-uv is a fast Python package installer and resolver written in Rust. It serves as a drop-in replacement for pip and pip-tools, offering significantly faster dependency resolution and installation. uv can also manage virtual environments and handle project dependencies defined in `pyproject.toml`.
+## 📁 What's Included
 
-Key features:
-- Fast dependency resolution and installation
-- Built-in virtual environment management
-- Compatible with PEP 517/518 standards
-- Works with `pyproject.toml` files
-
-## What is pyproject.toml?
-
-`pyproject.toml` is the modern standard configuration file for Python projects. It was introduced in PEP 518 and serves as a single source of truth for project metadata and dependencies.
-
-The file contains:
-- Project metadata (name, version, description)
-- Python version requirements
-- Project dependencies
-- Build system configuration
-- Optional tool configurations
-
-Example structure:
-```toml
-[project]
-name = "my-project"
-version = "0.1.0"
-description = "My project description"
-requires-python = ">=3.10"
-dependencies = [
-    "package-name>=1.0.0",
-]
+```
+hf-agentic-setup/
+├── smolagents/      # HuggingFace's smolagents framework
+│   ├── main.py      # Uses TransformersModel + CodeAgent
+│   ├── pyproject.toml
+│   └── Makefile
+├── llama_index/     # LlamaIndex framework
+│   ├── main.py      # Uses HuggingFaceLLM
+│   ├── pyproject.toml
+│   └── Makefile
+├── lang_graph/      # LangGraph framework
+│   ├── main.py      # Uses HuggingFacePipeline
+│   ├── pyproject.toml
+│   └── Makefile
+├── setup_model.sh   # Script to download models
+└── Makefile         # Global setup commands
 ```
 
-## How to Use This Makefile
+## ⚠️ Important: Environment Variables for 42 Students
 
-### Step 1: Copy the Makefile
+### Why Use sgoinfre?
 
-Copy the `Makefile` to your project directory where your `pyproject.toml` file is located:
+HuggingFace models are **large files** (500MB - 15GB+). Storing them in your home directory will:
+- ❌ Fill up your limited disk quota
+- ❌ Cause download failures
+- ❌ Slow down your system
+
+**Solution:** Store models in `sgoinfre` (shared storage with more space).
+
+### Required Environment Variables
+
+Add these to your `~/.zshrc`:
 
 ```bash
-cp Makefile /path/to/your/project/
+# HuggingFace Cache Configuration - IMPORTANT FOR 42!
+export HF_HUB_CACHE="/sgoinfre/students/$USER/huggingface/hub"
+export HF_HOME="/sgoinfre/students/$USER/huggingface"
 ```
 
-Make sure your project has a `pyproject.toml` file in the same directory.
+Then reload your shell:
 
-### Step 2: Available Commands
-
-Once the Makefile is in your project directory, you can use the following commands:
-
-**Install dependencies:**
 ```bash
+source ~/.zshrc
+```
+
+### Verify Setup
+
+```bash
+echo $HF_HUB_CACHE
+# Should output: /sgoinfre/students/YOUR_LOGIN/huggingface/hub
+```
+
+Or use the Makefile:
+
+```bash
+make check-env
+```
+
+## 🚀 Quick Start
+
+### 1. Set Up Environment Variables
+
+```bash
+# Create the cache directory
+mkdir -p /sgoinfre/students/$USER/huggingface/hub
+
+# Add to your shell profile
+echo 'export HF_HUB_CACHE="/sgoinfre/students/$USER/huggingface/hub"' >> ~/.zshrc
+echo 'export HF_HOME="/sgoinfre/students/$USER/huggingface"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 2. Download a Model (Optional, auto-downloads on first run)
+
+```bash
+./setup_model.sh Qwen/Qwen2.5-3B-Instruct
+```
+
+### 3. Run a Framework
+
+```bash
+# Choose your framework
+cd smolagents   # or llama_index, lang_graph
+
+# Install dependencies
 make install
-```
-This command will:
-- Check if uv is installed (and install it if missing)
-- Create a virtual environment using Python 3.10
-- Install all dependencies from `pyproject.toml`
-- Create the virtual environment in `.venv/`
 
-**Sync dependencies:**
-```bash
-make sync
-```
-Use this after adding new packages to `pyproject.toml`. It updates the virtual environment with the latest dependencies.
-
-**Run the application:**
-```bash
+# Run
 make run
 ```
-Runs `main.py` using the virtual environment. If a `.env` file exists, it will load environment variables from it.
 
-**Clean up:**
+## 📦 Available Commands (per framework)
+
+| Command | Description |
+|---------|-------------|
+| `make install` | Create venv and install dependencies |
+| `make sync` | Update dependencies |
+| `make run` | Run main.py with HF cache configured |
+| `make check-env` | Verify environment variables |
+| `make clean` | Remove venv |
+
+## 🤖 Models
+
+Default model: `Qwen/Qwen2.5-3B-Instruct`
+
+You can change the model in each `main.py` file. Recommended models:
+
+| Model | Size | RAM Needed |
+|-------|------|------------|
+| Qwen/Qwen2.5-0.5B-Instruct | ~1GB | 4GB |
+| Qwen/Qwen2.5-3B-Instruct | ~6GB | 8GB |
+| Qwen/Qwen2.5-7B-Instruct | ~14GB | 16GB |
+
+## 🔧 Troubleshooting
+
+### "HF_HUB_CACHE is not set" Error
+
+You haven't set the environment variables. Follow the setup above.
+
+### Model keeps re-downloading
+
+The cache directory might be wrong. Check:
 ```bash
-make clean
-```
-Removes the virtual environment and all Python cache files.
-
-**Setup environment file:**
-```bash
-make setup-env
-```
-Creates a `.env` file from `.env.example` template (if it exists).
-
-**Check token configuration:**
-```bash
-make check-token
-```
-Verifies if `HF_TOKEN` is properly configured in your `.env` file.
-
-**Show help:**
-```bash
-make help
-```
-Displays all available commands.
-
-### Step 3: Activate the Virtual Environment
-
-After running `make install`, you can activate the virtual environment:
-
-```bash
-source .venv/bin/activate
-```
-
-Alternatively, use `uv run` to execute commands within the virtual environment without activating it:
-
-```bash
-uv run python your_script.py
+ls $HF_HUB_CACHE
 ```
 
-## Workflow Example
+### Out of disk space
 
-1. Copy the Makefile to your project directory
-2. Ensure you have a `pyproject.toml` file with your dependencies
-3. Run `make install` to set up the environment
-4. Add or modify dependencies in `pyproject.toml` as needed
-5. Run `make sync` to update the environment
-6. Use `make run` to execute your application
-7. Use `make clean` when you want to start fresh
+Make sure you're using sgoinfre, not your home directory:
+```bash
+echo $HF_HUB_CACHE
+# GOOD: /sgoinfre/students/...
+# BAD:  /Users/... or ~/.cache/...
+```
 
+## 📚 Framework Comparison
+
+| Framework | Model Class | Best For |
+|-----------|-------------|----------|
+| **smolagents** | `TransformersModel` | Code agents, tool use |
+| **llama_index** | `HuggingFaceLLM` | RAG, document QA |
+| **lang_graph** | `HuggingFacePipeline` | Stateful workflows |
+
+## 🔗 Resources
+
+- [HuggingFace Models](https://huggingface.co/models)
+- [Smolagents Docs](https://huggingface.co/docs/smolagents)
+- [LlamaIndex Docs](https://docs.llamaindex.ai)
+- [LangGraph Docs](https://langchain-ai.github.io/langgraph/)

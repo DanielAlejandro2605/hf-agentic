@@ -1,11 +1,13 @@
 [project]
-name = "llama-index"
+name = "lang-graph"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+description = "LangGraph with local model"
 requires-python = ">=3.10"
 dependencies = [
     "langgraph>=1.0.2",
-    "langchain-openai>=1.0.2",
-    "langchain-huggingface>=1.0.1",
+    "langchain-huggingface>=0.1.0",
+    "langchain-groq>=0.2.0",  # For Groq API support
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    "accelerate>=1.11.0",
 ]
