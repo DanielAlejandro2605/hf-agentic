@@ -12,6 +12,11 @@ help:
 	@echo "  make clean      - Remove venv"
 
 install:
+	@if ! command -v uv >/dev/null 2>&1; then \
+		echo "Installing uv..."; \
+		curl -LsSf https://astral.sh/uv/install.sh | sh; \
+		echo "Please restart your shell or run: source ~/.local/bin/env"; \
+	fi
 	uv venv --python 3.10
 	uv sync
 
